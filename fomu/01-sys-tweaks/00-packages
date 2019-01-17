@@ -1,0 +1,21 @@
+ssh less sudo psmisc strace ed crda
+keyboard-configuration debconf-utils unzip
+build-essential manpages-dev python bash-completion gdb pkg-config
+python-rpi.gpio python3-rpi.gpio
+avahi-daemon
+hardlink ca-certificates curl
+fake-hwclock usbutils
+libraspberrypi-dev
+dosfstools
+dphys-swapfile
+raspberrypi-sys-mods
+apt-listchanges
+usb-modeswitch
+apt-transport-https
+libpam-chksshpwd
+rpi-update
+rsync
+htop
+man-db
+policykit-1
+ssh-import-id
