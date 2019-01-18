@@ -1,0 +1,10 @@
+picocom
+git
+make
+libtcl8.6
+libboost-python1.62.0
+libboost-thread1.62.0
+libboost-program-options1.62.0
+libboost-chrono1.62.0
+libboost-date-time1.62.0
+libboost-atomic1.62.0

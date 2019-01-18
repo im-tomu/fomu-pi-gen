@@ -34,6 +34,31 @@ made to the `export-image/` directory.
 
 ## Making Packages
 
+
+### fomu-flash
+
+```sh
+git clone https://github.com/im-tomu/fomu-flash.git
+cd fomu-flash
+export pkg_version=$(git describe --tags | sed 's/^v//g')
+make
+mkdir -p fomu-flash_${pkg_version}/usr/bin
+cp fomu-flash fomu-flash_${pkg_version}/usr/bin
+mkdir fomu-flash_${pkg_version}/DEBIAN
+cat > fomu-flash_${pkg_version}/DEBIAN/control <<EOF
+Package: fomu-flash
+Version: ${pkg_version}
+Section: base
+Priority: optional
+Architecture: armhf
+Maintainer: Sean Cross <sean@xobs.io>
+Description: Fomu SPI/Bitstream flashing for Raspberry Pi
+ Fomu Flash lets you program a bitstream for an ICE40, or
+ program the SPI flash attached to the board.
+EOF
+dpkg-deb --build fomu-flash_${pkg_version}
+```
+
 ### yosys
 
 ```sh
@@ -90,24 +115,31 @@ cd nextpnr
 export pkg_version=0.0.1-$(git rev-parse HEAD)
 cmake -DARCH=ice40 -DBUILD_GUI=OFF -DICEBOX_ROOT=$(pwd)/../icestorm/icestorm_*/share/icebox -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_READLINE=No .
 make
-make DESTDIR=$(pwd)/nextpnr_${pkg_version} install/strip
-mkdir nextpnr_${pkg_version}/DEBIAN
-cat > nextpnr_${pkg_version}/DEBIAN/control <<EOF
-Package: nextpnr
+make DESTDIR=$(pwd)/nextpnr-ice40_${pkg_version} install/strip
+mkdir nextpnr-ice40_${pkg_version}/DEBIAN
+cat > nextpnr-ice40_${pkg_version}/DEBIAN/control <<EOF
+Package: nextpnr-ice40
 Version: ${pkg_version}
 Section: base
 Priority: optional
 Architecture: armhf
 Maintainer: Sean Cross <sean@xobs.io>
-Description: nextpnr packaged for Fomu
+Description: nextpnr-ice40 packaged for Fomu
  This is an upstream build of nextpnr, specially packaged for Fomu.
 EOF
-dpkg-deb --build nextpnr_${pkg_version}
+dpkg-deb --build nextpnr-ice40_${pkg_version}
 ```
 
 ### gcc-riscv
 
 ```
+apt-get install autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
+git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
+cd riscv-gnu-toolchain
+export pkg_version=8.2.0-$(git rev-parse HEAD)
+./configure --prefix=/ --enable-multilib
+PATH=$PATH:$(pwd)/riscv-gnu-toolchain_${pkg_version}/usr/bin make DESTDIR=$(pwd)/riscv-gnu-toolchain_${pkg_version} -j4
+
 apt-get build-dep gcc
 export gcc_version=8.2.0
 wget http://ftp.gnu.org/gnu/gcc/gcc-${gcc_version}/gcc-${gcc_version}.tar.gz

@@ -1,6 +1,6 @@
 IMG_NAME=Fomu
 ENABLE_SSH=1
-STAGE_LIST='stage0 stage1-fomu fomu'
+STAGE_LIST='stage0 stage1-fomu stage2-fomu'
 FIRST_USER_NAME=fomu
 FIRST_USER_PASS=fomudev
 
