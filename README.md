@@ -31,3 +31,105 @@ This version makes the following changes to the upstream `pi-gen` project:
 
 Most changes are done in the `fomu/` directory, however at least some changes were
 made to the `export-image/` directory.
+
+## Making Packages
+
+### yosys
+
+```sh
+git clone https://github.com/YosysHQ/yosys.git
+cd yosys
+export pkg_version=$(git describe --tags | sed s/yosys-//g)
+make config-gcc
+make ENABLE_READLINE=0 PREFIX=/usr PREFIX=/usr
+make install ENABLE_READLINE=0 PREFIX=/usr DESTDIR=$(pwd)/yosys_${pkg_version}
+mkdir yosys_${pkg_version}/DEBIAN
+cat > yosys_${pkg_version}/DEBIAN/control <<EOF
+Package: yosys
+Version: ${pkg_version}
+Section: base
+Priority: optional
+Architecture: armhf
+Maintainer: Sean Cross <sean@xobs.io>
+Depends: libtcl8.6 (>= 8.6)
+Description: Yosys packaged for Fomu
+ This is an upstream build of Yosys, specially packaged for Fomu.
+EOF
+dpkg-deb --build yosys_${pkg_version}
+```
+
+### icestorm
+
+```sh
+got clone https://github.com/cliffordwolf/icestorm.git
+cd icestorm
+export pkg_version=0.0.1-$(git rev-parse HEAD)
+rm -rf iceprog
+PREFIX=/usr DESTDIR=$(pwd)/icestorm_${pkg_version} make SUBDIRS="icebox icepack icemulti icepll icetime icebram"
+PREFIX=/usr DESTDIR=$(pwd)/icestorm_${pkg_version} make install SUBDIRS="icebox icepack icemulti icepll icetime icebram"
+mkdir icestorm_${pkg_version}/DEBIAN
+cat > icestorm_${pkg_version}/DEBIAN/control <<EOF
+Package: icestorm
+Version: ${pkg_version}
+Section: base
+Priority: optional
+Architecture: armhf
+Maintainer: Sean Cross <sean@xobs.io>
+Description: icestorm packaged for Fomu
+ This is an upstream build of icestorm, specially packaged for Fomu.
+EOF
+dpkg-deb --build icestorm_${pkg_version}
+```
+
+### nextpnr
+
+```
+apt-get install build-essential libtcl8.6 cmake git make python3-dev libboost-python-dev libboost-filesystem-dev libboost-thread-dev libboost-program-options-dev
+git clone https://github.com/YosysHQ/nextpnr.git
+cd nextpnr
+export pkg_version=0.0.1-$(git rev-parse HEAD)
+cmake -DARCH=ice40 -DBUILD_GUI=OFF -DICEBOX_ROOT=$(pwd)/../icestorm/icestorm_*/share/icebox -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_READLINE=No .
+make
+make DESTDIR=$(pwd)/nextpnr_${pkg_version} install/strip
+mkdir nextpnr_${pkg_version}/DEBIAN
+cat > nextpnr_${pkg_version}/DEBIAN/control <<EOF
+Package: nextpnr
+Version: ${pkg_version}
+Section: base
+Priority: optional
+Architecture: armhf
+Maintainer: Sean Cross <sean@xobs.io>
+Description: nextpnr packaged for Fomu
+ This is an upstream build of nextpnr, specially packaged for Fomu.
+EOF
+dpkg-deb --build nextpnr_${pkg_version}
+```
+
+### gcc-riscv
+
+```
+apt-get build-dep gcc
+export gcc_version=8.2.0
+wget http://ftp.gnu.org/gnu/gcc/gcc-${gcc_version}/gcc-${gcc_version}.tar.gz
+tar xvzf gcc-${gcc_version}.tar.gz
+cd gcc-${gcc_version}
+mkdir build-gcc
+cd build-gcc
+../gcc/configure \
+	--prefix=/ \
+	--target=riscv64-unknown-embed-gcc \
+	--enable-languages="c" \
+	--enable-threads=single \
+	--enable-multilib \
+	--with-pkgversion=${gcc_version} \
+	--without-headers \
+	--disable-nls \
+	--disable-libatomic \
+	--disable-libgcc \
+	--disable-libgomp \
+	--disable-libmudflap \
+	--disable-libquadmath \
+	--disable-libssp \
+	--disable-nls \
+	--disable-shared \
+	--disable-tls \

@@ -1,0 +1,15 @@
+[Unit]
+Description=Regenerate SSH host keys
+Before=ssh.service
+
+[Service]
+Type=oneshot
+ExecStartPre=-/bin/mount -oremount,rw /
+ExecStartPre=-/bin/dd if=/dev/hwrng of=/dev/urandom count=1 bs=4096
+ExecStartPre=-/bin/sh -c "/bin/rm -f -v /etc/ssh/ssh_host_*_key*"
+ExecStart=/usr/bin/ssh-keygen -A -v
+ExecStartPost=/bin/systemctl disable regenerate_ssh_host_keys
+ExecStartPost=/sbin/shutdown -r now
+
+[Install]
+WantedBy=multi-user.target

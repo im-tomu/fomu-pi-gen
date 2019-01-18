@@ -4,7 +4,6 @@ IMG_FILE="${STAGE_WORK_DIR}/${IMG_FILENAME}.img"
 INFO_FILE="${STAGE_WORK_DIR}/${IMG_FILENAME}.info"
 
 on_chroot << EOF
-/etc/init.d/fake-hwclock stop
 hardlink -t /usr/share/doc
 EOF
 
@@ -35,6 +34,11 @@ rm -f "${ROOTFS_DIR}/var/lib/dbus/machine-id"
 true > "${ROOTFS_DIR}/etc/machine-id"
 
 ln -nsf /proc/mounts "${ROOTFS_DIR}/etc/mtab"
+
+# Prevent dhclient from writing its lease to a readonly card
+mkdir -p "${ROOTFS_DIR}/var/lib/"
+rm -rf "${ROOTFS_DIR}/var/lib/dhcp/"
+ln -nsf /tmp "${ROOTFS_DIR}/var/lib/dhcp"
 
 find "${ROOTFS_DIR}/var/log/" -type f -exec cp /dev/null {} \;
 

@@ -1,0 +1,29 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          firstboot_once
+# Required-Start:
+# Required-Stop:
+# Default-Start: 3
+# Default-Stop:
+# Short-Description: Resize the root filesystem to fill partition, and mark root ro
+# Description:
+### END INIT INFO
+#    sed -i 's/defaults/defaults,ro/g' /etc/fstab &&
+. /lib/lsb/init-functions
+case "$1" in
+  start)
+    log_daemon_msg "Starting firstboot_once"
+    ROOT_DEV=$(findmnt / -o source -n) &&
+    resize2fs $ROOT_DEV &&
+    mount -oremount,rw / &&
+    update-rc.d firstboot_once remove &&
+    (systemctl disable firstboot_once || true) &&
+    rm -f /etc/init.d/firstboot_once &&
+    shutdown -r now &&
+    log_end_msg $?
+    ;;
+  *)
+    echo "Usage: $0 start" >&2
+    exit 3
+    ;;
+esac

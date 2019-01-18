@@ -1,2 +1,2 @@
-NOOBS_NAME="Raspbian Lite"
-NOOBS_DESCRIPTION="A port of Debian with no desktop environment"
+NOOBS_NAME="Fomu Development"
+NOOBS_DESCRIPTION="A trimmed version of Raspbian customized for Fomu development"
