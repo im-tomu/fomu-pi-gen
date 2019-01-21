@@ -13,6 +13,8 @@ install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
 
 install -m 755 files/regenerate_ssh_host_keys.service	"${ROOTFS_DIR}/lib/systemd/system/"
 
+install -m 755 files/htpdate 		"${ROOTFS_DIR}/etc/default/"
+
 on_chroot << EOF
 if [ "${ENABLE_SSH}" == "1" ]; then
 	systemctl enable ssh
