@@ -65,4 +65,4 @@ dtoverlay=spi0-hw-cs
 dtoverlay=pi3-disable-bt
 
 # This is also required to enable the serial port
-dtoverlay=uart1
+dtoverlay=uart1,txd1_pin=32,rxd1_pin=33
