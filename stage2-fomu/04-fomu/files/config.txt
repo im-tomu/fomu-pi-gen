@@ -64,3 +64,5 @@ dtoverlay=spi0-hw-cs
 # We don't need bluetooth on this board
 dtoverlay=pi3-disable-bt
 
+# This is also required to enable the serial port
+dtoverlay=uart1
