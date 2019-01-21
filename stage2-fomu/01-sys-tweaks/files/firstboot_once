@@ -10,16 +10,38 @@
 ### END INIT INFO
 #    sed -i 's/defaults/defaults,ro/g' /etc/fstab &&
 . /lib/lsb/init-functions
+
+create_partition() {
+    new_sector=$(($(echo p | fdisk /dev/mmcblk0| grep mmcblk0p2 | awk '{print $3}')+1))
+    fdisk "/dev/mmcblk0" <<EOF || true
+n
+p
+3
+${new_sector}
+
+w
+EOF
+}
+
 case "$1" in
   start)
-    log_daemon_msg "Starting firstboot_once"
-    ROOT_DEV=$(findmnt / -o source -n) &&
-    resize2fs $ROOT_DEV &&
-    mount -oremount,rw / &&
-    update-rc.d firstboot_once remove &&
-    (systemctl disable firstboot_once || true) &&
-    rm -f /etc/init.d/firstboot_once &&
-    shutdown -r now &&
+    if [ -e /dev/mmcblk0p3 ]; then
+        mkfs.ext4 -F -F /dev/mmcblk0p3
+        mount /dev/mmcblk0p3 /mnt
+        cp -a /home/* /mnt/
+        umount /mnt
+        echo '/dev/mmcblk0p3  /home           ext4    defaults,noatime     0       3' >> /etc/fstab
+        ROOT_DEV=$(findmnt / -o source -n)
+        resize2fs $ROOT_DEV
+        mount -oremount,rw /
+        update-rc.d firstboot_once remove
+        (systemctl disable firstboot_once || true)
+        rm -f /etc/init.d/firstboot_once
+    else
+        create_partition
+    fi
+    echo "Rebooting"
+    shutdown -r now
     log_end_msg $?
     ;;
   *)
