@@ -35,6 +35,9 @@ true > "${ROOTFS_DIR}/etc/machine-id"
 
 ln -nsf /proc/mounts "${ROOTFS_DIR}/etc/mtab"
 
+rm -f "${ROOTFS_DIR}/etc/resolv.conf"
+ln -nsf /run/resolv.conf "${ROOTFS_DIR}/etc/resolv.conf"
+
 # Prevent dhclient from writing its lease to a readonly card
 mkdir -p "${ROOTFS_DIR}/var/lib/"
 rm -rf "${ROOTFS_DIR}/var/lib/dhcp/"

@@ -5,8 +5,6 @@ install -v -m 644 files/wait.conf		"${ROOTFS_DIR}/etc/systemd/system/dhcpcd.serv
 
 install -v -d					"${ROOTFS_DIR}/etc/network/if-pre-up.d"
 install -v -m 755 files/dhcp			"${ROOTFS_DIR}/etc/network/if-pre-up.d/dhcp"
-rm -f						"${ROOTFS_DIR}/etc/resolv.conf"
-ln -sf /run/resolv.conf				"${ROOTFS_DIR}/etc/resolv.conf"
 
 install -v -d					"${ROOTFS_DIR}/etc/wpa_supplicant"
 install -v -m 600 files/wpa_supplicant.conf	"${ROOTFS_DIR}/etc/wpa_supplicant/"
