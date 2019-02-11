@@ -4,6 +4,10 @@ _Fork of pi-gen used to create the Fomu development image_
 
 For more information, including how to customize this build, see [the original pi-gen repository](https://github.com/RPi-Distro/pi-gen/).
 
+**The default username is `fomu`, and the password is `fomudev`**
+
+The root filesystem is mounted readonly, to prevent card corruption when pulling power.
+
 ## Usage
 
 The easiest way to use this repository is via docker.  Run the following
@@ -40,6 +44,7 @@ made to the `export-image/` directory.
 ```sh
 git clone https://github.com/im-tomu/fomu-flash.git
 cd fomu-flash
+fakeroot
 export pkg_version=$(git describe --tags | sed 's/^v//g')
 make
 mkdir -p fomu-flash_${pkg_version}/usr/bin
@@ -56,12 +61,15 @@ Description: Fomu SPI/Bitstream flashing for Raspberry Pi
  Fomu Flash lets you program a bitstream for an ICE40, or
  program the SPI flash attached to the board.
 EOF
+chmod u+s fomu-flash_${pkg_version}/usr/bin/fomu-flash
 dpkg-deb --build fomu-flash_${pkg_version}
+exit
 ```
 
 ### yosys
 
 ```sh
+apt install -y pkg-config libtcl8.6 tclsh build-essential tcl8.6-dev tcl-dev python3 libffi-dev bison flex
 git clone https://github.com/YosysHQ/yosys.git
 cd yosys
 export pkg_version=$(git describe --tags | sed s/yosys-//g)
@@ -86,10 +94,9 @@ dpkg-deb --build yosys_${pkg_version}
 ### icestorm
 
 ```sh
-got clone https://github.com/cliffordwolf/icestorm.git
+git clone https://github.com/cliffordwolf/icestorm.git
 cd icestorm
 export pkg_version=0.0.1-$(git rev-parse HEAD)
-rm -rf iceprog
 PREFIX=/usr DESTDIR=$(pwd)/icestorm_${pkg_version} make SUBDIRS="icebox icepack icemulti icepll icetime icebram"
 PREFIX=/usr DESTDIR=$(pwd)/icestorm_${pkg_version} make install SUBDIRS="icebox icepack icemulti icepll icetime icebram"
 mkdir icestorm_${pkg_version}/DEBIAN
@@ -113,7 +120,7 @@ apt-get install build-essential libtcl8.6 cmake git make python3-dev libboost-py
 git clone https://github.com/YosysHQ/nextpnr.git
 cd nextpnr
 export pkg_version=0.0.1-$(git rev-parse HEAD)
-cmake -DARCH=ice40 -DBUILD_GUI=OFF -DICEBOX_ROOT=$(pwd)/../icestorm/icestorm_*/share/icebox -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_READLINE=No .
+cmake -DARCH=ice40 -DBUILD_GUI=OFF -DICEBOX_ROOT=$(pwd)/../icestorm/icestorm_*/usr/share/icebox -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_READLINE=No .
 make
 make DESTDIR=$(pwd)/nextpnr-ice40_${pkg_version} install/strip
 mkdir nextpnr-ice40_${pkg_version}/DEBIAN
@@ -135,7 +142,7 @@ dpkg-deb --build nextpnr-ice40_${pkg_version}
 ```
 apt-get install autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
 git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
-cd riscv-gnu-toolchain
+cd riscv-gnu-toolchains
 export pkg_version=8.2.0-$(git rev-parse HEAD)
 ./configure --prefix=/ --enable-multilib
 PATH=$PATH:$(pwd)/riscv-gnu-toolchain_${pkg_version}/usr/bin make DESTDIR=$(pwd)/riscv-gnu-toolchain_${pkg_version} -j4
