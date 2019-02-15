@@ -18,4 +18,4 @@ HTP_SERVERS="www.pool.ntp.org www.ntp.br www.wikipedia.org"
 
 # The general options can be viewed with '$ htpdate -h'. However, you can
 # keep the current options, that works fine.
-HTP_OPTIONS="-D -s -t"
+HTP_OPTIONS="-D -s -t -m 30 -M 300"
