@@ -144,31 +144,22 @@ apt-get install autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libg
 git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
 cd riscv-gnu-toolchains
 export pkg_version=8.2.0-$(git rev-parse HEAD)
-./configure --prefix=/ --enable-multilib
-PATH=$PATH:$(pwd)/riscv-gnu-toolchain_${pkg_version}/usr/bin make DESTDIR=$(pwd)/riscv-gnu-toolchain_${pkg_version} -j4
-
-apt-get build-dep gcc
-export gcc_version=8.2.0
-wget http://ftp.gnu.org/gnu/gcc/gcc-${gcc_version}/gcc-${gcc_version}.tar.gz
-tar xvzf gcc-${gcc_version}.tar.gz
-cd gcc-${gcc_version}
-mkdir build-gcc
-cd build-gcc
-../gcc/configure \
-	--prefix=/ \
-	--target=riscv64-unknown-embed-gcc \
-	--enable-languages="c" \
-	--enable-threads=single \
-	--enable-multilib \
-	--with-pkgversion=${gcc_version} \
-	--without-headers \
-	--disable-nls \
-	--disable-libatomic \
-	--disable-libgcc \
-	--disable-libgomp \
-	--disable-libmudflap \
-	--disable-libquadmath \
-	--disable-libssp \
-	--disable-nls \
-	--disable-shared \
-	--disable-tls \
+./configure --prefix=/opt/riscv --with-arch=rv32gc --with-abi=ilp32d --disab
+le-linux
+make
+mkdir riscv-toolchain_${pkg_version}/
+mkdir riscv-toolchain_${pkg_version}/DEBIAN
+cat > riscv-toolchain_${pkg_version}/DEBIAN/control <<EOF
+Package: riscv-toolchain
+Version: ${pkg_version}
+Section: base
+Priority: optional
+Architecture: armhf
+Maintainer: Sean Cross <sean@xobs.io>
+Description: riscv toolchain packaged for Fomu
+ This is an upstream build of riscv, specially packaged for Fomu.
+EOF
+mkdir riscv-toolchain_${pkg_version}/usr
+cp -a /opt/riscv/* riscv-toolchain_${pkg_version}/usr
+dpkg-deb --build riscv-toolchain_${pkg_version}
+```
