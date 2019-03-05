@@ -161,5 +161,39 @@ Description: riscv toolchain packaged for Fomu
 EOF
 mkdir riscv-toolchain_${pkg_version}/usr
 cp -a /opt/riscv/* riscv-toolchain_${pkg_version}/usr
+find riscv-toolchain_${pkg_version}/usr | xargs strip --strip-debug --strip-unneeded
 dpkg-deb --build riscv-toolchain_${pkg_version}
 ```
+
+### gcc-lm32
+
+```
+mkdir lm32-gnu-toolchain
+cd lm32-gnu-toolchain
+wget https://mirror.freedif.org/GNU/binutils/binutils-2.32.tar.xz
+wget https://mirror.freedif.org/GNU/gcc/gcc-8.3.0/gcc-8.3.0.tar.xz
+tar xvJf binutils-2.32.tar.xz
+tar xvJf gcc-8.3.0.tar.xz
+cd binutils-2.32 && mkdir build && cd build
+../configure --target=lm32-elf --prefix=/usr && make && DESTDIR=/opt/lm32 make install
+cd ../..
+cd gcc-8.3.0 && rm -rf libstdc++-v3/ && mkdir build && cd build
+export PATH=$PATH:/opt/lm32/usr/bin
+../configure --target=lm32-elf --enable-languages="c,c++" --disable-libgcc --disable-libssp --prefix=/usr && make && DESTDIR=/opt/lm32 make install
+export pkg_version=8.3.0-fomu
+mkdir lm32-toolchain_${pkg_version}/
+mkdir lm32-toolchain_${pkg_version}/DEBIAN
+cat > lm32-toolchain_${pkg_version}/DEBIAN/control <<EOF
+Package: lm32-toolchain
+Version: ${pkg_version}
+Section: base
+Priority: optional
+Architecture: armhf
+Maintainer: Sean Cross <sean@xobs.io>
+Description: lm32 toolchain packaged for Fomu
+ This is an upstream build of lm32, specially packaged for Fomu.
+EOF
+mkdir lm32-toolchain_${pkg_version}/usr
+cp -a /opt/lm32/* lm32-toolchain_${pkg_version}/usr
+find lm32-toolchain_${pkg_version}/usr | xargs strip --strip-debug --strip-unneeded
+dpkg-deb --build lm32-toolchain_${pkg_version}
