@@ -14,7 +14,7 @@ The easiest way to use this repository is via docker.  Run the following
 to generate an image:
 
 ```sh
-sudo modprobe binfmt-support
+sudo modprobe binfmt-misc
 ./build-docker.sh 2>&1 | tee build.log
 ```
 
