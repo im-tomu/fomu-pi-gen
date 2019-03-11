@@ -8,3 +8,4 @@ libboost-program-options1.62.0
 libboost-chrono1.62.0
 libboost-date-time1.62.0
 libboost-atomic1.62.0
+dfu-util
