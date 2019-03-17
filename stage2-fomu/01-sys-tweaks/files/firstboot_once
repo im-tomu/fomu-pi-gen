@@ -28,8 +28,15 @@ case "$1" in
     if [ -e /dev/mmcblk0p3 ]; then
         mkfs.ext4 -F -F /dev/mmcblk0p3
         mount /dev/mmcblk0p3 /mnt
+
+        # Fix sudo by placing its storage on a rw partition
+        mkdir -p /home/var/lib/sudo
+        rm -rf /var/lib/sudo
+        ln -s /home/var/lib/sudo /var/lib/sudo
+
         cp -a /home/* /mnt/
         umount /mnt
+
         echo '/dev/mmcblk0p3  /home           ext4    defaults,noatime     0       3' >> /etc/fstab
         ROOT_DEV=$(findmnt / -o source -n)
         resize2fs $ROOT_DEV
