@@ -96,7 +96,7 @@ dpkg-deb --build yosys_${pkg_version}
 ```sh
 git clone https://github.com/cliffordwolf/icestorm.git
 cd icestorm
-export pkg_version=0.0.1-$(git rev-parse HEAD)
+export pkg_version=0.0.2-$(git rev-parse HEAD)
 PREFIX=/usr DESTDIR=$(pwd)/icestorm_${pkg_version} make SUBDIRS="icebox icepack icemulti icepll icetime icebram"
 PREFIX=/usr DESTDIR=$(pwd)/icestorm_${pkg_version} make install SUBDIRS="icebox icepack icemulti icepll icetime icebram"
 mkdir icestorm_${pkg_version}/DEBIAN
@@ -116,10 +116,10 @@ dpkg-deb --build icestorm_${pkg_version}
 ### nextpnr
 
 ```
-apt-get install build-essential libtcl8.6 cmake git make python3-dev libboost-python-dev libboost-filesystem-dev libboost-thread-dev libboost-program-options-dev
+apt-get install build-essential libtcl8.6 cmake git make python3-dev libboost-python-dev libboost-filesystem-dev libboost-thread-dev libboost-program-options-dev libboost-iostreams-dev
 git clone https://github.com/YosysHQ/nextpnr.git
 cd nextpnr
-export pkg_version=0.0.1-$(git rev-parse HEAD)
+export pkg_version=0.0.2-$(git rev-parse HEAD)
 cmake -DARCH=ice40 -DBUILD_GUI=OFF -DICEBOX_ROOT=$(pwd)/../icestorm/icestorm_*/usr/share/icebox -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_READLINE=No .
 make
 make DESTDIR=$(pwd)/nextpnr-ice40_${pkg_version} install/strip
