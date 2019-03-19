@@ -5,7 +5,7 @@ FIRST_USER_NAME=fomu
 FIRST_USER_PASS=fomudev
 
 # Uncomment this if a build fails and you'd like to try again
-CONTINUE=1
+#CONTINUE=1
 
 # Uncomment this to have the container stick around after building.
 # Useful for running:
