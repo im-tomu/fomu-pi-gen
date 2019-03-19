@@ -15,7 +15,7 @@ to generate an image:
 
 ```sh
 sudo modprobe binfmt-misc
-./build-docker.sh 2>&1 | tee build.log
+./run-build-docker.sh
 ```
 
 ## Configuration

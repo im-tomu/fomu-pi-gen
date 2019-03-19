@@ -6,6 +6,8 @@ SKIP_IMAGES
 .pc
 *-pc
 apt-cacher-ng/
+extra-config
+build.log
 
 # vim swapfiles
 *.swp
