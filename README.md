@@ -119,7 +119,7 @@ dpkg-deb --build icestorm_${pkg_version}
 apt-get install build-essential libtcl8.6 cmake git make python3-dev libboost-python-dev libboost-filesystem-dev libboost-thread-dev libboost-program-options-dev libboost-iostreams-dev
 git clone https://github.com/YosysHQ/nextpnr.git
 cd nextpnr
-export pkg_version=0.0.2-$(git rev-parse HEAD)
+export pkg_version=0.0.3-$(git rev-parse HEAD)
 cmake -DARCH=ice40 -DBUILD_GUI=OFF -DICEBOX_ROOT=$(pwd)/../icestorm/icestorm_*/usr/share/icebox -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_READLINE=No .
 make
 make DESTDIR=$(pwd)/nextpnr-ice40_${pkg_version} install/strip
@@ -140,7 +140,7 @@ dpkg-deb --build nextpnr-ice40_${pkg_version}
 ### gcc-riscv
 
 ```
-apt-get install autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
+apt-get install autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev libeigen3-dev
 git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
 cd riscv-gnu-toolchains
 export pkg_version=8.2.0-$(git rev-parse HEAD)
