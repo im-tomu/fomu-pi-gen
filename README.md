@@ -162,6 +162,7 @@ EOF
 mkdir riscv-toolchain_${pkg_version}/usr
 cp -a /opt/riscv/* riscv-toolchain_${pkg_version}/usr
 find riscv-toolchain_${pkg_version}/usr | xargs strip --strip-debug --strip-unneeded
+rm -rf riscv-toolchain_${pkg_version}/usr/include/ riscv-toolchain_${pkg_version}/usr/share/man/man7 riscv-toolchain_${pkg_version}/usr/share/locale riscv-toolchain_${pkg_version}/usr/share/info riscv-toolchain_${pkg_version}/usr/share/gcc-8.2.0/ riscv-toolchain_${pkg_version}/usr/share/gcc-8.3.0/ riscv-toolchain_${pkg_version}/usr/share/gdb
 dpkg-deb --build riscv-toolchain_${pkg_version}
 ```
 

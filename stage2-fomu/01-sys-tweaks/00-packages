@@ -1,6 +1,6 @@
 ssh less sudo psmisc strace ed crda
 keyboard-configuration debconf-utils unzip
-build-essential manpages-dev python bash-completion gdb pkg-config
+build-essential manpages-dev python bash-completion pkg-config
 python-rpi.gpio python3-rpi.gpio
 avahi-daemon
 hardlink ca-certificates curl
