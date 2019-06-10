@@ -14,3 +14,4 @@ libboost-filesystem1.62.0
 libboost-regex1.62.0
 dfu-util
 wiringpi
+jq
