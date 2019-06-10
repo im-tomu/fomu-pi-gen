@@ -13,3 +13,4 @@ libboost-atomic1.62.0
 libboost-filesystem1.62.0
 libboost-regex1.62.0
 dfu-util
+wiringpi
