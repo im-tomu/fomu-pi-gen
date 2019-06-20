@@ -129,6 +129,7 @@ Package: nextpnr-ice40
 Version: ${pkg_version}
 Section: base
 Priority: optional
+Depends: libboost-regex1.62.0 (>= 1.62.0)
 Architecture: armhf
 Maintainer: Sean Cross <sean@xobs.io>
 Description: nextpnr-ice40 packaged for Fomu
@@ -143,9 +144,8 @@ dpkg-deb --build nextpnr-ice40_${pkg_version}
 apt-get install autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev libeigen3-dev
 git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
 cd riscv-gnu-toolchains
-export pkg_version=8.2.0-$(git rev-parse HEAD)
-./configure --prefix=/opt/riscv --with-arch=rv32gc --with-abi=ilp32d --disab
-le-linux
+export pkg_version=8.2.3-$(git rev-parse HEAD)
+./configure --prefix=/opt/riscv --enable-multilib --disable-linux
 make
 mkdir riscv-toolchain_${pkg_version}/
 mkdir riscv-toolchain_${pkg_version}/DEBIAN
@@ -161,8 +161,11 @@ Description: riscv toolchain packaged for Fomu
 EOF
 mkdir riscv-toolchain_${pkg_version}/usr
 cp -a /opt/riscv/* riscv-toolchain_${pkg_version}/usr
-find riscv-toolchain_${pkg_version}/usr | xargs strip --strip-debug --strip-unneeded
 rm -rf riscv-toolchain_${pkg_version}/usr/include/ riscv-toolchain_${pkg_version}/usr/share/man/man7 riscv-toolchain_${pkg_version}/usr/share/locale riscv-toolchain_${pkg_version}/usr/share/info riscv-toolchain_${pkg_version}/usr/share/gcc-8.2.0/ riscv-toolchain_${pkg_version}/usr/share/gcc-8.3.0/ riscv-toolchain_${pkg_version}/usr/share/gdb
+find riscv-toolchain_${pkg_version}/usr/ -name '*.so*' | xargs strip --strip-debug --strip-unneeded
+find riscv-toolchain_${pkg_version}/usr/bin | xargs strip --strip-debug --strip-unneeded
+find riscv-toolchain_${pkg_version}/usr/riscv64-unknown-elf/bin | xargs strip --strip-debug --strip-unneeded
+find riscv-toolchain_${pkg_version}/usr/libexec/gcc/riscv64-unknown-elf/8.3.0/ | xargs strip --strip-debug --strip-unneeded
 dpkg-deb --build riscv-toolchain_${pkg_version}
 ```
 
