@@ -15,3 +15,10 @@ libboost-regex1.62.0
 dfu-util
 wiringpi
 jq
+riscv-toolchain
+lm32-toolchain
+yosys
+nextpnr-ice40
+fomu-flash
+htpdate
+icestorm
