@@ -11,9 +11,3 @@ on_chroot << EOF
 systemctl mask serial-getty@ttyAMA0.service
 sudo systemctl mask serial-getty@ttyS0.service
 EOF
-
-# Install local versions of packages
-on_chroot << EOF
-dpkg -i /*.deb
-rm -f /*.deb
-EOF
