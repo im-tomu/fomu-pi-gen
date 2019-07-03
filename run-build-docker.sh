@@ -1,6 +1,7 @@
 #!/bin/sh
 
 extra_config="config"
+git checkout config
 
 sed -i '/IMG_VERSION=/d' config
 sed -i '/IMG_FILENAME=/d' config
