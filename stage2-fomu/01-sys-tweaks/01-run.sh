@@ -56,4 +56,5 @@ cp files/*.deb "${ROOTFS_DIR}"
 on_chroot << EOF
 dpkg -i /*.deb
 rm -f /*.deb
+apt-get update
 EOF
