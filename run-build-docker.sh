@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 extra_config="config"
 git checkout config

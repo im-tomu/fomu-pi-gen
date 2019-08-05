@@ -55,15 +55,19 @@ echo "/:     offset $ROOT_OFFSET, length $ROOT_LENGTH"
 
 ROOT_FEATURES="^huge_file"
 for FEATURE in metadata_csum 64bit; do
+        echo "Doing $FEATURE"
 	if grep -q "$FEATURE" /etc/mke2fs.conf; then
 	    ROOT_FEATURES="^$FEATURE,$ROOT_FEATURES"
 	fi
 done
+echo "Making Boot FS"
 mkdosfs -n boot -F 32 -v "$BOOT_DEV" > /dev/null
 mkfs.ext4 -L rootfs -O "$ROOT_FEATURES" "$ROOT_DEV" > /dev/null
 
+echo "Making Root FS"
 mount -v "$ROOT_DEV" "${ROOTFS_DIR}" -t ext4
 mkdir -p "${ROOTFS_DIR}/boot"
 mount -v "$BOOT_DEV" "${ROOTFS_DIR}/boot" -t vfat
 
+echo "Performing RSync"
 rsync -aHAXx --exclude var/cache/apt/archives "${EXPORT_ROOTFS_DIR}/" "${ROOTFS_DIR}/" || true
