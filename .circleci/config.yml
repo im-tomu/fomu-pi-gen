@@ -1,0 +1,20 @@
+version: 2.1
+jobs:
+  build:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          name: "Building Raspberry Pi Image"
+          command: |
+              sudo apt-get install -y -q apt-utils
+              sudo apt install -y -q qemu
+              sudo modprobe binfmt-misc
+              ./run-build-docker.sh
+              ls ./deploy
+              cp ./deploy/Fomu-Dev-*.zip Fomu-Dev-latest.zip
+
+      - store_artifacts:
+          path: Fomu-Dev-latest.zip
+          destination: Fomu-Dev
