@@ -1,7 +1,6 @@
 # Fomu pi-gen
 
-Build Status : [![CircleCI](https://circleci.com/gh/whatnick/fomu-pi-gen.svg?style=svg)](https://circleci.com/gh/whatnick/fomu-pi-gen)
-
+Build Status : [![CircleCI](https://circleci.com/gh/im-tomu/fomu-pi-gen.svg?style=svg)](https://circleci.com/gh/im-tomu/fomu-pi-gen)
 _Fork of pi-gen used to create the Fomu development image_
 
 For more information, including how to customize this build, see [the original pi-gen repository](https://github.com/RPi-Distro/pi-gen/).
